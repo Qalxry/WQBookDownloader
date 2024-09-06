@@ -23,7 +23,7 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
 
 ## 安装依赖
 
-在运行本项目前，你需要安装一些依赖项。确保你已经安装了 [Node.js](https://nodejs.org/) 和 [Python](https://www.python.org/)。
+在运行本项目前，你需要安装一些依赖项。确保你已经安装了 [Node.js](https://nodejs.org/) 和 [Python](https://www.python.org/)，以及谷歌浏览器（Chrome）。
 
 1. 克隆本仓库：
    ```bash
