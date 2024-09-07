@@ -36,6 +36,11 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
    npm install puppeteer pdf-lib
    ```
 
+   如果 `npm install` 卡在 `sill idealTree buildDeps` 不动，可以尝试使用淘宝镜像安装依赖，或者科学上网。
+   ```bash
+   npm install puppeteer pdf-lib --registry=https://registry.npmmirror.com
+   ```
+
 3. 安装 Python 依赖：
    ```bash
    pip install pymupdf
