@@ -27,7 +27,7 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
 
 1. 克隆本仓库：
    ```bash
-   git clone https://github.com/yourusername/WQBookDownloader.git
+   git clone https://github.com/Qalxry/WQBookDownloader.git
    cd WQBookDownloader
    ```
 
