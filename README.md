@@ -6,8 +6,12 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
 
 **注意：本程序仅用于学习交流，禁止用于商业用途。**
 
-> 如果您使用校园机构账户，并且能够在网页端查看到完整电子书：
-> 
+> ### 如果您使用个人账户
+>
+> 请确保您购买了该电子书，否则，只能下载前30页的预览内容，无法下载完整电子书。如果您未购买该电子书，代码依然会下载前文泉书局提供的30页的内容，但不会生成PDF文件。
+>
+> ### 如果您使用校园机构账户，并且能够在网页端查看到完整电子书
+>
 > 请查看您网页的URL是否具有学校特定的域名前缀，例如：`lib-xxx.wqxuetang` 。
 >
 > 如果是，则需要修改 js 文件中硬编码的URL前缀。
@@ -36,22 +40,26 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
 在运行本项目前，你需要安装一些依赖项。确保你已经安装了 [Node.js](https://nodejs.org/) 和 [Python](https://www.python.org/)，以及谷歌浏览器（Chrome）。
 
 1. 克隆本仓库：
+
    ```bash
    git clone https://github.com/Qalxry/WQBookDownloader.git
    cd WQBookDownloader
    ```
 
 2. 安装 Node.js 依赖：
+
    ```bash
    npm install puppeteer pdf-lib
    ```
 
    如果 `npm install` 卡在 `sill idealTree buildDeps` 不动，可以尝试使用淘宝镜像安装依赖，或者科学上网。
+
    ```bash
    npm install puppeteer pdf-lib --registry=https://registry.npmmirror.com
    ```
 
 3. 安装 Python 依赖：
+
    ```bash
    pip install pymupdf
    ```
@@ -71,11 +79,13 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
 1. **执行 JavaScript 程序**
 
    运行以下命令启动 `WQBookDownloader.js` 脚本：
+
    ```bash
    node WQBookDownloader.js
    ```
 
    运行后，会提示你输入 `bid`：
+
    ```
    请输入bid:
    ```
@@ -93,6 +103,7 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
 3. **添加目录**
 
    生成初步 PDF 文件后，程序会自动运行 `add_toc.py` 脚本，为 PDF 文件添加目录。你也可以手动运行以下命令：
+
    ```bash
    python add_toc.py "./<bid>_<bookName>.pdf" "./<bid>_<bookName>_images/catalog.json" "./<bid>_<bookName>_toc.pdf"
    ```
@@ -114,4 +125,3 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
 - 如果出现任何问题，可以在 Github 仓库中提交 issue，共同讨论解决方案。不过大概率本人没时间维护这个随便写的项目 🥹
 
 您现在已经完成了基本的设置，并了解了如何使用 WQBookDownloader 项目。希望这个项目对您的学习有所帮助！如果有任何问题或建议，请随时联系我。
-
