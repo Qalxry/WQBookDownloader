@@ -39,9 +39,7 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
 
 ## 安装依赖
 
-在运行本项目前，你需要安装一些依赖项。确保你已经安装了 [Node.js](https://nodejs.org/) 和 [Python](https://www.python.org/)，以及谷歌浏览器（Chrome）。
-
-> 如果您没有安装 Chrome ，希望使用 Edge ，可以参考 @June-Lang 提供的解决方案：[issue #2](https://github.com/Qalxry/WQBookDownloader/issues/2)。
+在运行本项目前，你需要安装一些依赖项。确保你已经安装了 [Node.js](https://nodejs.org/) 和 [Python](https://www.python.org/)。
 
 1. 克隆本仓库：
 
@@ -61,6 +59,8 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
    ```bash
    npm install puppeteer pdf-lib --registry=https://registry.npmmirror.com
    ```
+
+   > 如果您无法安装 Puppeteer 内置的 Chromium  ，希望使用已存在的具有 Chromium 的浏览器（比如 Edge ），可以参考 @June-Lang 提供的解决方案：[issue #2](https://github.com/Qalxry/WQBookDownloader/issues/2)。
 
 3. 安装 Python 依赖：
 
@@ -126,6 +126,4 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
 ## 注意事项
 
 - 本程序仅用于个人学习和交流，禁止用于商业用途。
-- 如果出现任何问题，可以在 Github 仓库中提交 issue，共同讨论解决方案。不过大概率本人没时间维护这个随便写的项目 🥹
-
-您现在已经完成了基本的设置，并了解了如何使用 WQBookDownloader 项目。希望这个项目对您的学习有所帮助！如果有任何问题或建议，请随时联系我。
+- 如果出现任何问题，可以在 Github 仓库中提交 issue，共同讨论解决方案！🤗
