@@ -16,7 +16,7 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
 >
 > 请查看您网页的URL是否具有学校特定的域名前缀，例如：`lib-xxx.wqxuetang` 。
 >
-> 如果是，则需要修改 js 文件中硬编码的URL前缀。
+> 如果是，则需要修改对应域名。**该功能已在代码中实现**，但未经过测试，因为我没有校园账号。如果您遇到问题，请提交 issue 提供更多信息，非常感谢！
 >
 > 详细信息可查看 @RessMatthew 提供的信息 [issue #1](https://github.com/Qalxry/WQBookDownloader/issues/1) 。
 >
@@ -88,7 +88,15 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
    node WQBookDownloader.js
    ```
 
-   运行后，会提示你输入 `bid`：
+   程序提示下方的信息，对应 [issue #1](https://github.com/Qalxry/WQBookDownloader/issues/1) 中提到的问题：
+
+   ```
+   是否使用校园机构账号？
+      - 如果不使用，回车跳过即可。此时使用通用域名：wqbook.wqxuetang.com
+      - 否则，请输入您的校园机构域名，详见README。示例：lib-ustc.wqxuetang.com
+   ```
+   
+   如果您不使用校园机构账号，直接回车跳过即可。接下来提示你输入 `bid`：
 
    ```
    请输入bid:
