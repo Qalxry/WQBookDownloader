@@ -244,7 +244,7 @@ var launchFlag = LAUNCH_USE_OLD_COOKIES;
 
         if (element) {
             // 等待元素内的 uni-view 标签中的 uni-image 标签出现
-            await page.waitForSelector(`#pageImgBox${pageNum} uni-view uni-image`);
+            await page.waitForSelector(`#pageImgBox${pageNum} uni-view.page-lmg img`);
             await sleep(2000);
             // 截图该元素并保存为 image.png
             await element.screenshot({ path: `${dir}/image${pageNum}.png` });
