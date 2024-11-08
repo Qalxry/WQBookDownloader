@@ -1,3 +1,6 @@
+
+var wq_domain = "wqbook.wqxuetang.com";
+
 // npm install puppeteer
 const puppeteer = require("puppeteer");
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
@@ -61,9 +64,24 @@ var launchFlag = LAUNCH_USE_OLD_COOKIES;
     let page = undefined;
     let bookName = undefined;
 
+
+    // 检查是否使用校园机构域名
+    let domain_ans = await new Promise((resolve) => {
+        rl.question(`是否使用校园机构账号？\n\t- 如果不使用，回车跳过即可。此时使用通用域名：${wq_domain}\n\t- 否则，请输入您的校园机构域名，详见README。示例：lib-ustc.wqxuetang.com\n请输入：`, (answer) => {
+            resolve(answer);
+        });
+    });
+    // 去除首尾空格
+    domain_ans = domain_ans.trim();
+    if (domain_ans !== "") {
+        wq_domain = domain_ans;
+    } else {
+        console.log("使用通用域名: ", wq_domain);
+    }
+    
     // 输入bid
     const bid = await new Promise((resolve) => {
-        rl.question("请输入bid: ", (bid) => {
+        rl.question("\n请输入bid: ", (bid) => {
             resolve(bid);
         });
     });
@@ -92,7 +110,7 @@ var launchFlag = LAUNCH_USE_OLD_COOKIES;
                 width: 375,
                 height: 667,
             });
-            await innerPage.goto(`https://wqbook.wqxuetang.com/deep/m/read/pdf?bid=${bid}`);
+            await innerPage.goto(`https://${wq_domain}/deep/m/read/pdf?bid=${bid}`);
 
             // 自动化操作
             // console.log("请点击右上角书签，完成登录操作。");
@@ -127,7 +145,7 @@ var launchFlag = LAUNCH_USE_OLD_COOKIES;
             while (true) {
                 await sleep(2000);
                 const url = innerPage.url();
-                if (url.startsWith("https://wqbook.wqxuetang.com/deep/m/read/pdf")) {
+                if (url.startsWith("https://${wq_domain}/deep/m/read/pdf")) {
                     break;
                 }
             }
@@ -156,7 +174,7 @@ var launchFlag = LAUNCH_USE_OLD_COOKIES;
             }
 
             // 访问目标网页
-            await innerPage.goto(`https://wqbook.wqxuetang.com/deep/m/read/pdf?bid=${bid}`);
+            await innerPage.goto(`https://${wq_domain}/deep/m/read/pdf?bid=${bid}`);
             console.log("访问目标网页成功");
 
             let answer = "y";
@@ -245,7 +263,7 @@ var launchFlag = LAUNCH_USE_OLD_COOKIES;
         if (element) {
             // 等待元素内的 uni-view 标签中的 uni-image 标签出现
             await page.waitForSelector(`#pageImgBox${pageNum} uni-view.page-lmg img`);
-            await sleep(2000);
+            await sleep(2000);  // 等待一段时间确保图片加载完成，否则容易出现空白块
             // 截图该元素并保存为 image.png
             await element.screenshot({ path: `${dir}/image${pageNum}.png` });
             console.log(`第 ${pageNum} 页截图保存成功`);
@@ -266,7 +284,7 @@ var launchFlag = LAUNCH_USE_OLD_COOKIES;
         console.log("目录文件已存在，跳过下载目录文件步骤");
     } else {
         console.log("下载目录文件...");
-        const catalogUrl = `https://wqbook.wqxuetang.com/deep/book/v1/catatree?bid=${bid}`;
+        const catalogUrl = `https://${wq_domain}/deep/book/v1/catatree?bid=${bid}`;
         const response = await page.goto(catalogUrl);
         const catalogData = await response.json();
 
