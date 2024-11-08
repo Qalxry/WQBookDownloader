@@ -145,7 +145,7 @@ var launchFlag = LAUNCH_USE_OLD_COOKIES;
             while (true) {
                 await sleep(2000);
                 const url = innerPage.url();
-                if (url.startsWith("https://${wq_domain}/deep/m/read/pdf")) {
+                if (url.startsWith(`https://${wq_domain}/deep/m/read/pdf`)) {
                     break;
                 }
             }
