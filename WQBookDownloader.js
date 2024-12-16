@@ -304,7 +304,7 @@ var launchFlag = LAUNCH_USE_OLD_COOKIES;
     const path = require("path");
 
     const imagesDir = dir;
-    const outputPdfPath = `./${bid}_${bookName}.pdf`;
+    const outputPdfPath = `${bid}_${bookName}.pdf`;
 
     async function imagesToPdf() {
         const pdfDoc = await PDFDocument.create();
@@ -378,7 +378,7 @@ var launchFlag = LAUNCH_USE_OLD_COOKIES;
     // 指定 Python 脚本和工作目录路径
     const scriptPath = path.join(__dirname, "add_toc.py");
     const workDir = __dirname;
-    const outputPdfPath2 = `./${bid}_${bookName}_toc.pdf`;
+    const outputPdfPath2 = `${bid}_${bookName}_toc.pdf`;
 
     // 运行 Python 脚本
     exec(
