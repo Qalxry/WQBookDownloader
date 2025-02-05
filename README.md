@@ -10,8 +10,6 @@
 
 ### [Linux 下载](https://github.com/Qalxry/WQBookDownloader/releases/download/GUI/WQBookDownloader-v2.0.0-linux64.zip)
 
----
-
 ![界面](./assets/image.png)
 
 ## 简介
