@@ -1,14 +1,16 @@
 # WQBookDownloader v2.0.0
 
-### *WQBookDownloader 现已全新升级为 GUI 版本 v2 ！！！🚀🚀🚀*
+> ### *WQBookDownloader 现已全新升级为 GUI 版本 v2 ！！！🚀🚀🚀*
+> 
+> ### *小白开箱即用，并且功能升级！🤗无需下载任何依赖，无需编程知识！👍*
+> 
+> 提供 Windows、Linux 的可执行文件下载，MacOS 用户请自行下载源码运行。
 
-### *小白开箱即用，并且功能升级！🤗无需下载任何依赖，无需编程知识！👍*
+## 下载
 
-提供 Windows、Linux 的可执行文件下载，MacOS 用户请自行下载源码运行。
+#### Windows 64位：[下载](https://github.com/Qalxry/WQBookDownloader/releases/download/GUI/WQBookDownloader-v2.0.0-win64.zip)
 
-### [Windows 下载](https://github.com/Qalxry/WQBookDownloader/releases/download/GUI/WQBookDownloader-v2.0.0-win64.zip)
-
-### [Linux 下载](https://github.com/Qalxry/WQBookDownloader/releases/download/GUI/WQBookDownloader-v2.0.0-linux64.zip)
+#### Linux 64位：[下载](https://github.com/Qalxry/WQBookDownloader/releases/download/GUI/WQBookDownloader-v2.0.0-linux64.zip)
 
 ![界面](./assets/image.png)
 
