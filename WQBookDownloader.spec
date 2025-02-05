@@ -3,7 +3,7 @@
 import PyInstaller.config
 import os
 import datetime
-PyInstaller.config.CONF['distpath'] = os.path.join('dist', f'build-{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}')
+PyInstaller.config.CONF['distpath'] = os.path.join('dist', f'build-{datetime.datetime.now().strftime("%Y%m%d")}')
 
 a = Analysis(
     ['wqdl/main.py'],

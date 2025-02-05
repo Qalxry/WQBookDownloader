@@ -8,7 +8,7 @@
 
 ### [Windows 下载](https://github.com/Qalxry/WQBookDownloader/releases/download/GUI/WQBookDownloader-v2.0.0-win64.zip)
 
-### [Linux 下载（待后续构建）]()
+### [Linux 下载](https://github.com/Qalxry/WQBookDownloader/releases/download/GUI/WQBookDownloader-v2.0.0-linux64.zip)
 
 ---
 
@@ -33,6 +33,8 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
 - **自动保存登录状态**：无需每次都手动登录，程序会自动保存 cookie，用户可自行选择是否使用。
 - **对文泉书局的深入适配**：支持文泉书局的多种情况，包括校园机构账号登录、多卷书籍下载等。
 - **自动检测更新**：（暂未实现）。
+
+> Windows 支持三种浏览器。而 Linux 目前只支持 Chrome 浏览器，因为在 Linux 下与 Firefox 和 Edge 交互存在问题，后续可能不会进行修复。
 
 ## 使用方法
 
