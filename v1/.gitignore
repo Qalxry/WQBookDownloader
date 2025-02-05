@@ -1,0 +1,12 @@
+*
+*/
+
+!.gitignore
+!WQBookDownloader.js
+# !package.json
+# !package-lock.json
+!README.md
+!add_toc.py
+!asserts
+!asserts/*
+!LICENSE

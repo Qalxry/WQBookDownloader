@@ -1,4 +1,20 @@
-# WQBookDownloader
+# WQBookDownloader v2.0.0
+
+### *WQBookDownloader 现已全新升级为 GUI 版本 v2 ！！！🚀🚀🚀*
+
+### *小白开箱即用，并且功能升级！🤗无需下载任何依赖，无需编程知识！👍*
+
+提供 Windows、Linux 的可执行文件下载，MacOS 用户请自行下载源码运行。
+
+### [Windows 下载]()
+
+### [Linux 下载]()
+
+---
+
+![界面](./assets/image.png)
+
+## 简介
 
 WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书***内容（或者机构账户提供的电子书内容），并将其生成为 PDF 文件，附带目录。
 
@@ -6,130 +22,47 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
 
 **注意：本程序仅用于学习交流，禁止用于商业用途。**
 
-> #### 如果您使用个人账户
->
-> 请确保您购买了该电子书，否则，只能下载前30页的预览内容，无法下载完整电子书。
->
-> 如果您未购买该电子书，代码依然会下载前文泉书局提供的30页的内容，但不会生成PDF文件。
->
-> #### 如果您使用校园机构账户，并且能够在网页端查看到完整电子书
->
-> 请查看您网页的URL是否具有学校特定的域名前缀，例如：`lib-xxx.wqxuetang` 。
->
-> 如果是，则需要修改对应域名。**该功能已在代码中实现**，但未经过测试，因为我没有校园机构账号。如果您遇到问题，请提交 issue 提供更多信息，非常感谢！
->
-> 详细信息可查看 @RessMatthew 提供的信息 [issue #1](https://github.com/Qalxry/WQBookDownloader/issues/1) 。
->
-> 再次声明：下载的PDF文件仅供您个人学习使用，请勿将下载的PDF进行传播，以免造成侵权行为。
+## 功能特性
 
-## 目录
+- **友好的界面与提示**：无需编程知识，小白开箱即用。
+- **自动解析 URL**：无需手动输入 bid，程序会自动解析 URL 中的 bid。
+- **跨平台**：支持 Windows、Linux、MacOS。
+- **高速下载**：每秒能够爬取 3~4 页内容。
+- **优化的 PDF 文件**：自动获取并添加目录。并且对生成的 PDF 进行优化，使其更小巧，基本上只有几十MB。
+- **多浏览器支持**：支持 Chrome（谷歌浏览器）、Firefox（火狐浏览器）、Edge（微软浏览器）。
+- **自动下载适配的 selenuim 驱动**：无需手动下载驱动，程序会自动下载适配的驱动！
+- **自动保存登录状态**：无需每次都手动登录，程序会自动保存 cookie，用户可自行选择是否使用。
+- **对文泉书局的深入适配**：支持文泉书局的多种情况，包括校园机构账号登录、多卷书籍下载等。
+- **自动检测更新**：（暂未实现）。
 
-- [项目介绍](#项目介绍)
-- [安装依赖](#安装依赖)
-- [使用说明](#使用说明)
-  - [准备工作](#准备工作)
-  - [运行步骤](#运行步骤)
+## 使用方法
 
-## 项目介绍
+1. **下载程序**：下载对应平台的可执行文件，解压后，可以看到只有一个 exe 文件，双击即可运行。
 
-该项目包含两个主要文件：
+2. **输入想下载的文泉书局书籍URL**：你可以在文泉书局的网站上找到你想下载的书籍，然后复制 URL，粘贴到程序中。
 
-- `WQBookDownloader.js`: 使用 Puppeteer 库进行网页自动化操作，下载图片并生成基础的 PDF 文件。
-- `add_toc.py`: 使用 PyMuPDF 库为生成的 PDF 文件添加目录。
+3. **解析 URL**：点击解析按钮，程序会自动解析 URL 中的 bid，然后列出书籍的信息。可选择要下载的书籍卷数。
 
-## 安装依赖
+4. **选择浏览器**：选择你的浏览器，目前支持 Chrome、Firefox、Edge。
 
-在运行本项目前，你需要安装一些依赖项。确保你已经安装了 [Node.js](https://nodejs.org/) 和 [Python](https://www.python.org/)。
+5. **下载书籍**：点击下载按钮，开始下载书籍。
+    - **登录**：如果你没有登录，程序会自动打开浏览器，让你登录。登录后，程序会自动保存 cookie，下次无需再次登录。
+    - **下载**：程序会自动下载书籍，下载过程中，你可以在界面底部看到下载情况。
+    - **生成 PDF**：下载完成后，程序会自动将图片合成 PDF，并且添加目录。
+    - **查看 PDF**：PDF 会保存在程序所在目录的 `downloads` 文件夹中，你可以在程序中点击打开文件夹按钮，查看下载的 PDF 文件。
 
-1. 克隆本仓库：
+## 使用许可
 
-   ```bash
-   git clone https://github.com/Qalxry/WQBookDownloader.git
-   cd WQBookDownloader
-   ```
+本项目采用 GPL-3.0 许可证。
 
-2. 安装 Node.js 依赖：
+## 鸣谢
 
-   ```bash
-   npm install puppeteer pdf-lib
-   ```
-
-   如果 `npm install` 卡在 `sill idealTree buildDeps` 不动，可以尝试使用淘宝镜像安装依赖，或者科学上网。
-
-   ```bash
-   npm install puppeteer pdf-lib --registry=https://registry.npmmirror.com
-   ```
-
-   > 如果您无法安装 Puppeteer 内置的 Chromium  ，希望使用已存在的具有 Chromium 的浏览器（比如 Edge ），可以参考 @June-Lang 提供的解决方案：[issue #2](https://github.com/Qalxry/WQBookDownloader/issues/2)。
-
-3. 安装 Python 依赖：
-
-   ```bash
-   pip install pymupdf
-   ```
-
-## 使用说明
-
-### 准备工作
-
-1. 获取要下载的电子书的 `bid`，你可以从目标网站的 URL 中找到该参数。
-
-例如：
-
-![alt text](./asserts/711a88fad7b6aa2d7c47ebc508efcad0.png)
-
-### 运行步骤
-
-1. **执行 JavaScript 程序**
-
-   运行以下命令启动 `WQBookDownloader.js` 脚本：
-
-   ```bash
-   node WQBookDownloader.js
-   ```
-
-   程序提示下方的信息，对应 [issue #1](https://github.com/Qalxry/WQBookDownloader/issues/1) 中提到的问题：
-
-   ```
-   是否使用校园机构账号？
-      - 如果不使用，回车跳过即可。此时使用通用域名：wqbook.wqxuetang.com
-      - 否则，请输入您的校园机构域名，详见README。示例：lib-ustc.wqxuetang.com
-   ```
-   
-   如果您不使用校园机构账号，直接回车跳过即可。接下来提示你输入 `bid`：
-
-   ```
-   请输入bid:
-   ```
-
-   输入 `bid` 后，请按以下步骤操作：
-
-   - 如果是初次运行，程序会使浏览器打开，并提示你手动完成登录操作，然后保存登录状态。
-   - 登录完成后，程序会继续运行，并自动截图每一页内容，保存到指定文件夹中。
-   - 如果之前已经保存了登录状态，程序会自动加载已保存的登录状态，并跳过登录步骤。
-
-2. **生成初步的 PDF**
-
-   - 程序会将截图保存为 PNG 格式，并生成一个初步的 PDF 文件（未包含目录）。
-
-3. **添加目录**
-
-   生成初步 PDF 文件后，程序会自动运行 `add_toc.py` 脚本，为 PDF 文件添加目录。你也可以手动运行以下命令：
-
-   ```bash
-   python add_toc.py "./<bid>_<bookName>.pdf" "./<bid>_<bookName>_images/catalog.json" "./<bid>_<bookName>_toc.pdf"
-   ```
-
-   - `<bid>`: 你输入的 bid。
-   - `<bookName>`: 自动获取的书名。
-
-4. **查看结果**
-
-   最终的 PDF 文件会带有目录，并保存在当前目录下：
-
-   ```
-   ./<bid>_<bookName>_toc.pdf
-   ```
+- 感谢文泉书局提供的优质电子书资源。
+- 感谢 [Selenium](https://www.selenium.dev/) 提供的浏览器自动化库。
+- 感谢 [Webdriver Manager for Python](https://github.com/SergeyPirogov/webdriver_manager) 提供的浏览器驱动管理工具。
+- 感谢 [PyMuPDF](https://pymupdf.readthedocs.io/en/latest/) 提供的 PDF 处理库。
+- 感谢 [Flet](https://flet.dev/) 提供的现代化UI库。
+- 感谢 [PyInstaller](https://www.pyinstaller.org/) 提供的打包工具。
 
 ## 注意事项
 

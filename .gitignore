@@ -1,12 +1,33 @@
-*
-*/
 
-!.gitignore
-!WQBookDownloader.js
-# !package.json
-# !package-lock.json
-!README.md
-!add_toc.py
-!asserts
-!asserts/*
-!LICENSE
+# Ignored files
+**/__pycache__
+**/.vscode
+**/.idea
+**/.old/
+**/test/
+
+downloads/
+
+# 构建文件
+build/
+dist/
+*.egg-info/
+
+configs.json
+cookies.json
+
+# 虚拟环境
+venv/
+.env/
+
+# Python 缓存
+*.pyc
+*.pyo
+
+# Preserved files
+!.gitkeep
+!**/.gitkeep
+
+
+
+
