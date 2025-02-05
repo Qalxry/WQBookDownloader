@@ -38,8 +38,8 @@ class DriverManager(object):
     def http_client(self):
         return self._download_manager.http_client
 
-    def install(self) -> str:
-        raise NotImplementedError("Please Implement this method")
+    # def install(self) -> str:
+    #     raise NotImplementedError("Please Implement this method")
 
     def _get_driver_binary_path(self, driver):
         binary_path = self._cache_manager.find_driver(driver)

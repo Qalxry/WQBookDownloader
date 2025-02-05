@@ -1,12 +1,19 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import PyInstaller.config
+import os
+import datetime
+PyInstaller.config.CONF['distpath'] = os.path.join('dist', f'build-{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}')
 
 a = Analysis(
     ['wqdl/main.py'],
     pathex=[],
     binaries=[],
-    datas=[('assets/NotoSansSC-Regular.ttf','NotoSansSC-Regular.ttf')],
-    hiddenimports=[],
+    datas=[('assets/*','assets')],
+    hiddenimports=[
+        "flet",
+        "selenium",
+    ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

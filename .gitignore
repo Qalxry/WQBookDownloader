@@ -15,6 +15,7 @@ dist/
 
 configs.json
 cookies.json
+test.py
 
 # 虚拟环境
 venv/

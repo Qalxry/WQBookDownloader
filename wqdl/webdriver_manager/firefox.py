@@ -1,11 +1,11 @@
 import os
 from typing import Optional
 
-from webdriver_manager.core.download_manager import DownloadManager
-from webdriver_manager.core.driver_cache import DriverCacheManager
-from webdriver_manager.core.manager import DriverManager
-from webdriver_manager.core.os_manager import OperationSystemManager
-from webdriver_manager.drivers.firefox import GeckoDriver
+from wqdl.webdriver_manager.core.download_manager import DownloadManager
+from wqdl.webdriver_manager.core.driver_cache import DriverCacheManager
+from wqdl.webdriver_manager.core.manager import DriverManager
+from wqdl.webdriver_manager.core.os_manager import OperationSystemManager
+from wqdl.webdriver_manager.drivers.firefox import GeckoDriver
 
 
 class GeckoDriverManager(DriverManager):

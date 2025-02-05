@@ -72,9 +72,9 @@ class WQDLConfig(JsonProxy):
         )
         self.edge_chromium_driver_manager_config = EdgeChromiumDriverManagerConfig(
             url="https://msedgedriver.azureedge.net",
-            latest_release_url="https://msedgedriver.azureedge.net/LATEST_STABLE",
+            latest_release_url="https://msedgedriver.azureedge.net/LATEST_RELEASE",
         )
-        self.screenshot_wait = 0.1
+        self.screenshot_wait = 0.5
         self.download_dir = "./downloads"
         self.user_agent = "Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1"
         self.login_window_size = (300, 1100)
@@ -179,7 +179,7 @@ def commit_issue(error_msg: str):
 
     # URL编码与生成
     title = f"错误报告：{error_msg.splitlines()[-1][:100]}".strip()
-    encoded_url = f"{REPO_URL}/issues/new?title={urllib.parse.quote(title)}&body={urllib.parse.quote(report)}"
+    encoded_url = f"{REPO_URL}/issues/new?labels=error+report&title={urllib.parse.quote(title)}&body={urllib.parse.quote(report)}"
 
     # 打开浏览器
     try:
@@ -282,10 +282,8 @@ def fetch(url, retries=3) -> requests.Response | None:
             response = requests.get(url)
             response.raise_for_status()
             return response
-        except HTTPError as e:
-            print(
-                f"下载文件失败，状态码：{response.status_code}。重试... ({retry+1}/3)"
-            )
+        except:
+            print(f"下载文件失败，状态码：{response.status_code}。重试... ({retry+1}/3)")
             time.sleep(0.1)
     return None
 
@@ -745,7 +743,6 @@ class WQBookDownloader:
                 self.gui.print_info(f"正在下载 {browserType} 浏览器驱动，请稍候...")
                 driver_manager.install()
                 self.gui.print_info(f"{browserType} 浏览器驱动下载完成")
-                self.gui.close_waiting_dialog()
 
             self.driver = webdriver.Chrome(
                 service=ChromeService(driver_manager.get_driver_path()),
@@ -775,7 +772,6 @@ class WQBookDownloader:
                 self.gui.print_info(f"正在下载 {browserType} 浏览器驱动，请稍候...")
                 driver_manager.install()
                 self.gui.print_info(f"{browserType} 浏览器驱动下载完成")
-                self.gui.close_waiting_dialog()
 
             self.driver = webdriver.Firefox(
                 service=FirefoxService(driver_manager.get_driver_path()),
@@ -806,7 +802,6 @@ class WQBookDownloader:
                 self.gui.print_info(f"正在下载 {browserType} 浏览器驱动，请稍候...")
                 driver_manager.install()
                 self.gui.print_info(f"{browserType} 浏览器驱动下载完成")
-                self.gui.close_waiting_dialog()
 
             self.driver = webdriver.Edge(
                 service=EdgeService(driver_manager.get_driver_path()),
@@ -854,9 +849,10 @@ class WQBookDownloader:
             "提示", "接下来点击确认将打开浏览器，请手动登录后再返回此窗口", ["确认"]
         )
         self.gui.print_info("请完成手动登录操作...")
-        self.gui.waiting_dialog("请稍候", "等待完成登录操作，请勿直接关闭窗口...")
         try:
+            self.gui.waiting_dialog("请稍候", "等待完成登录操作，请勿直接关闭窗口...")
             self.setup_driver(headless=False, window_size="mobile")
+            self.gui.waiting_dialog("请稍候", "等待完成登录操作，请勿直接关闭窗口...")
             self.driver.get(
                 # f"https://{self.book['domain']}/deep/m/read/pdf?bid={self.book['bid']}"
                 wqdlconfig.page_url_pattern.format(
@@ -1174,7 +1170,8 @@ class WQBookDownloader:
                 if not item["isLeaf"] and item["children"]:
                     flat_toc.extend(flatten_toc(item["children"]))
             return flat_toc
-
+        if toc_data is None:
+            return
         try:
             doc = fitz.open(pdf_path)
             toc = flatten_toc(toc_data)
@@ -1227,9 +1224,14 @@ class WQBookDownloader:
                     f"{'第'+str(self.book['volume_no'])+'卷的' if self.book['volume_no'] else ''}目录数据已保存到: {catalog_path}"
                 )
             else:
-                self.gui.print_info(
-                    f"下载{'第'+str(self.book['volume_no'])+'卷的' if self.book['volume_no'] else ''}目录文件失败，将无法生成目录"
+                res = self.gui.query_user(
+                    f"下载{'第'+str(self.book['volume_no'])+'卷的' if self.book['volume_no'] else ''}目录文件失败，将无法生成目录",
+                    ["确认并报告错误", "确认"],
                 )
+                if res == "确认并报告错误":
+                    commit_issue(f"下载目录文件失败：{catalog_url}，{self.book}")
+                return None
+                    
         self.book["toc_data"] = catalog_data
         return catalog_data
 
@@ -1261,6 +1263,7 @@ class WQBookDownloader:
             return
         elif (
             self.book["downloaded_pages"] != self.book["pages"]
+            and res != '继续生成PDF'
             and self.gui.query_user(
                 content=f"仅获取到 {self.book['downloaded_pages']} 页，是否继续生成 PDF？",
                 selections=["是", "否"],
@@ -1274,9 +1277,10 @@ class WQBookDownloader:
         if pdf_path in ["取消", "返回"]:
             return
 
-        toc_data = self.fetch_toc()
-        if toc_data is not None and self.book["downloaded_pages"] == self.book["pages"]:
-            self.add_toc(pdf_path, toc_data)
+        if self.book["downloaded_pages"] == self.book["pages"]:
+            toc_data = self.fetch_toc()
+            if toc_data is not None:
+                self.add_toc(pdf_path, toc_data)
 
         # 清理临时文件
         if wqdlconfig.clean_up and os.path.exists(self.image_dir):
@@ -1299,9 +1303,14 @@ def download_book(gui_handler: WQBookDownloaderGUI, book: dict):
 
 
 if __name__ == "__main__":
-
+    if getattr(sys, 'frozen', False):
+        base_dir = sys._MEIPASS
+    else:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+         
     def main(page: ft.Page):
-        page.fonts = {"Noto Sans SC": "NotoSansSC-Regular.ttf"}
+        # page.fonts = {"Noto Sans SC": "NotoSansSC-Regular.ttf"}
+        page.fonts = {"Noto Sans SC": os.path.join(base_dir, "assets", "NotoSansSC-Regular.ttf")}
         page.theme = ft.Theme(font_family="Noto Sans SC")
         page.window_height = 700
         page.window_min_height = 700

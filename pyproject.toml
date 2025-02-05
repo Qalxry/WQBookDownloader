@@ -17,6 +17,7 @@ dependencies = [
     "PyMuPDF>=1.25.2",
     "flet==0.19.0",
     "pyinstaller",
+    "python-dotenv"
 ]
 
 [tool.setuptools]
