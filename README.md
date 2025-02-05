@@ -6,9 +6,9 @@
 
 提供 Windows、Linux 的可执行文件下载，MacOS 用户请自行下载源码运行。
 
-### [Windows 下载]()
+### [Windows 下载](https://github.com/Qalxry/WQBookDownloader/releases/download/GUI/WQBookDownloader-v2.0.0-win64.zip)
 
-### [Linux 下载]()
+### [Linux 下载（待后续构建）]()
 
 ---
 
