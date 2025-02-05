@@ -1,4 +1,4 @@
-# WQBookDownloader v2.0.0
+<h1 align='center'>WQBookDownloader 文泉书局下载器 v2.0.0</h1>
 
 > ### *WQBookDownloader 现已全新升级为 GUI 版本 v2 ！！！🚀🚀🚀*
 > 
