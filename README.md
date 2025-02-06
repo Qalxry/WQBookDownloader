@@ -1,4 +1,4 @@
-# WQBookDownloader v2.0.0
+<h1 align='center'>WQBookDownloader 文泉书局下载器 v2.0.0</h1>
 
 <!-- Github Stats -->
 ![GitHub stars](https://img.shields.io/github/stars/Qalxry/WQBookDownloader?style=social)
