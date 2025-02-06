@@ -1,12 +1,14 @@
-# WQBookDownloader 文泉书局下载器 v2.0.0
+<h1 align='center'>WQBookDownloader 文泉书局下载器 v2.0.0</h1>
 
 <!-- Github Stats -->
-![GitHub stars](https://img.shields.io/github/stars/Qalxry/WQBookDownloader?style=social)
-![GitHub forks](https://img.shields.io/github/forks/Qalxry/WQBookDownloader?style=social)
-![GitHub](https://img.shields.io/github/license/Qalxry/WQBookDownloader)
-![GitHub last commit](https://img.shields.io/github/last-commit/Qalxry/WQBookDownloader)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Qalxry/WQBookDownloader)
-![GitHub repo size](https://img.shields.io/github/repo-size/Qalxry/WQBookDownloader)
+<div align="center">
+<img src="https://img.shields.io/github/stars/Qalxry/WQBookDownloader?style=social" alt="GitHub stars" />
+<img src="https://img.shields.io/github/forks/Qalxry/WQBookDownloader?style=social" alt="GitHub forks" />
+<img src="https://img.shields.io/github/license/Qalxry/WQBookDownloader" alt="GitHub" />
+<img src="https://img.shields.io/github/last-commit/Qalxry/WQBookDownloader" alt="GitHub last commit" />
+<img src="https://img.shields.io/github/commit-activity/m/Qalxry/WQBookDownloader" alt="GitHub commit activity" />
+<img src="https://img.shields.io/github/repo-size/Qalxry/WQBookDownloader" alt="GitHub repo size" />
+</div>
 
 > ### *WQBookDownloader 现已全新升级为 GUI 版本 v2 ！！！🚀🚀🚀*
 >
