@@ -462,10 +462,16 @@ class WQBookDownloaderGUI:
             "是，不再提示": "是",
             "否，不再提示": "否",
         },
+        return_index: Optional[bool] = False,
     ) -> str:
         res = None
 
         if content in self.query_user_memory:
+            if return_index:
+                for i, selection in enumerate(selections):
+                    if selection == self.query_user_memory[content]:
+                        return i
+                return -1
             return self.query_user_memory[content]
 
         def close_dlg(e: ft.ControlEvent):
@@ -495,6 +501,12 @@ class WQBookDownloaderGUI:
         self.page.update()
         while res is None:
             time.sleep(0.05)
+            
+        if return_index:
+            for i, selection in enumerate(selections):
+                if selection == res:
+                    return i
+            return -1
         return res
 
     @show_log
@@ -684,7 +696,7 @@ class WQBookDownloaderGUI:
                 self.query_user("🌹感谢🌹", "感谢您的支持！", ["确认"])
             else:
                 for i in range(1, 10):
-                    self.query_user("?" * i, "😭" * i, ["就不给😛", "好吧😒"])
+                    res = self.query_user("?" * i, "😭" * i, ["就不给😛", "好吧😒"])
                     if res == "好吧😒":
                         wqdlconfig.starred = True
                         goto_star_repo()
