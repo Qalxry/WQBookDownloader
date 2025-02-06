@@ -4,8 +4,8 @@
 ![GitHub stars](https://img.shields.io/github/stars/Qalxry/WQBookDownloader?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/Qalxry/WQBookDownloader?style=social)
 ![GitHub](https://img.shields.io/github/license/Qalxry/WQBookDownloader)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Qalxry/WQBookDownloader)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Qalxry/WQBookDownloader)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Qalxry/WQBookDownloader)
 ![GitHub repo size](https://img.shields.io/github/repo-size/Qalxry/WQBookDownloader)
 
 > ### *WQBookDownloader 现已全新升级为 GUI 版本 v2 ！！！🚀🚀🚀*
