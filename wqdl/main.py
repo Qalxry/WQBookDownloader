@@ -32,7 +32,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchWindowException, TimeoutException
 
-
+import wqdl
 from wqdl.webdriver_manager.chrome import ChromeDriverManager
 from wqdl.webdriver_manager.firefox import GeckoDriverManager
 from wqdl.webdriver_manager.microsoft import EdgeChromiumDriverManager
@@ -1323,7 +1323,7 @@ if __name__ == "__main__":
         page.update()
         page.window_center()
         page.padding = ft.Padding(20, 30, 20, 0)
-        page.title = "WQBookDownloader 文泉书库下载器"
+        page.title = f"WQBookDownloader 文泉书局下载器 v{wqdl.__version__}"
         WQBookDownloaderGUI(page)
         page.window_visible = True  # 显示窗口
         page.update()

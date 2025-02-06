@@ -1,16 +1,24 @@
 # WQBookDownloader v2.0.0
 
+<!-- Github Stats -->
+![GitHub stars](https://img.shields.io/github/stars/Qalxry/WQBookDownloader?style=social)
+![GitHub forks](https://img.shields.io/github/forks/Qalxry/WQBookDownloader?style=social)
+![GitHub](https://img.shields.io/github/license/Qalxry/WQBookDownloader)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Qalxry/WQBookDownloader)
+![GitHub last commit](https://img.shields.io/github/last-commit/Qalxry/WQBookDownloader)
+![GitHub repo size](https://img.shields.io/github/repo-size/Qalxry/WQBookDownloader)
+
 > ### *WQBookDownloader 现已全新升级为 GUI 版本 v2 ！！！🚀🚀🚀*
-> 
+>
 > ### *小白开箱即用，并且功能升级！🤗无需下载任何依赖，无需编程知识！👍*
-> 
-> 提供 Windows、Linux 的可执行文件下载，MacOS 用户请自行下载源码运行。
+>
+> 提供 Windows、Linux 的可执行文件下载，MacOS 用户请自行下载源码运行，方法见下。
 
 ## 最新版本下载
 
-#### Windows 64位：[下载](https://github.com/Qalxry/WQBookDownloader/releases/download/GUI/WQBookDownloader-v2.0.0-win64.zip)
+### Windows 64位：[下载](https://github.com/Qalxry/WQBookDownloader/releases/download/GUI/WQBookDownloader-v2.0.0-win64.zip)
 
-#### Linux 64位：[下载](https://github.com/Qalxry/WQBookDownloader/releases/download/GUI/WQBookDownloader-v2.0.0-linux64.zip)
+### Linux 64位：[下载](https://github.com/Qalxry/WQBookDownloader/releases/download/GUI/WQBookDownloader-v2.0.0-linux64.zip)
 
 ![界面](./assets/image.png)
 
@@ -38,6 +46,8 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
 
 ## 使用方法
 
+### 从预构建的可执行文件运行
+
 1. **下载程序**：下载对应平台的可执行文件，解压后，可以看到只有一个 exe 文件，双击即可运行。
 
 2. **输入想下载的文泉书局书籍URL**：你可以在文泉书局的网站上找到你想下载的书籍，然后复制 URL，粘贴到程序中。
@@ -51,6 +61,38 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
     - **下载**：程序会自动下载书籍，下载过程中，你可以在界面底部看到下载情况。
     - **生成 PDF**：下载完成后，程序会自动将图片合成 PDF，并且添加目录。
     - **查看 PDF**：PDF 会保存在程序所在目录的 `downloads` 文件夹中，你可以在程序中点击打开文件夹按钮，查看下载的 PDF 文件。
+
+### 从源码运行
+
+1. **创建 Conda 环境（可选）**：
+
+```bash
+conda create -n wqdl python=3.10
+conda activate wqdl
+```
+
+2. **克隆仓库，安装依赖**：
+
+```bash
+git clone https://github.com/Qalxry/WQBookDownloader.git
+cd WQBookDownloader
+pip install -r requirements.txt
+pip install .
+```
+
+3. **运行程序**：
+
+```bash
+python -m wqdl.main
+```
+
+4. **打包程序为单个可执行文件（可选）**：
+
+```bash
+pyinstaller WQBookDownloader.spec
+```
+
+打包完成后，可以在 `dist/build-YYYYMMDD` 文件夹中找到可执行文件。
 
 ## 使用许可
 
@@ -69,3 +111,8 @@ WQBookDownloader 项目旨在自动化下载文泉书局的***已付费电子书
 
 - 本程序仅用于个人学习和交流，禁止用于商业用途。
 - 如果出现任何问题，可以在 Github 仓库中提交 issue，共同讨论解决方案！🤗
+
+
+
+<!-- Star History Badge -->
+[![Star History Chart](https://api.star-history.com/svg?repos=Qalxry/WQBookDownloader&type=Date)](https://star-history.com/#Qalxry/WQBookDownloader&Date)
