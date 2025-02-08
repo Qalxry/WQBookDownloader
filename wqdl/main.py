@@ -788,6 +788,7 @@ class WQBookDownloaderGUI:
             self.close_waiting_dialog()
             self.print_info("未获取到云端配置信息")
             return
+        
         updated_keys = ""
         for key, value in hotfix_info.items():
             if key in wqdlconfig:
