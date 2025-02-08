@@ -10,16 +10,16 @@ from wqdl.webdriver_manager.drivers.firefox import GeckoDriver
 
 class GeckoDriverManager(DriverManager):
     def __init__(
-            self,
-            version: Optional[str] = None,
-            name: str = "geckodriver",
-            url: str = "https://github.com/mozilla/geckodriver/releases/download",
-            latest_release_url: str = "https://api.github.com/repos/mozilla/geckodriver/releases/latest",
-            mozila_release_tag: str = "https://api.github.com/repos/mozilla/geckodriver/releases/tags/{0}",
-            download_manager: Optional[DownloadManager] = None,
-            cache_manager: Optional[DriverCacheManager] = None,
-            os_system_manager: Optional[OperationSystemManager] = None,
-            mozila_release_download_url: Optional[str] = None
+        self,
+        version: Optional[str] = None,
+        name: str = "geckodriver",
+        url: str = "https://github.com/mozilla/geckodriver/releases/download",
+        latest_release_url: str = "https://api.github.com/repos/mozilla/geckodriver/releases/latest",
+        mozila_release_tag: str = "https://api.github.com/repos/mozilla/geckodriver/releases/tags/{0}",
+        download_manager: Optional[DownloadManager] = None,
+        cache_manager: Optional[DriverCacheManager] = None,
+        os_system_manager: Optional[OperationSystemManager] = None,
+        mozila_release_download_url: Optional[str] = None
     ):
         super(GeckoDriverManager, self).__init__(
             download_manager=download_manager,

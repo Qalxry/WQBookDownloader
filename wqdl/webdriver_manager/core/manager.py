@@ -1,16 +1,16 @@
 import os
-
+from typing import Optional
 from wqdl.webdriver_manager.core.download_manager import WDMDownloadManager
 from wqdl.webdriver_manager.core.driver_cache import DriverCacheManager
 from wqdl.webdriver_manager.core.logger import log
 from wqdl.webdriver_manager.core.os_manager import OperationSystemManager
-
+from wqdl.webdriver_manager.core.driver import Driver
 
 class DriverManager(object):
     def __init__(
         self, download_manager=None, cache_manager=None, os_system_manager=None
     ):
-        self.driver = None
+        self.driver: Driver = None
         self.driver_path = None
         self._cache_manager = cache_manager
         if not self._cache_manager:
@@ -19,12 +19,14 @@ class DriverManager(object):
         self._download_manager = download_manager
         if self._download_manager is None:
             self._download_manager = WDMDownloadManager()
-
-        self._os_system_manager = os_system_manager
-        if not self._os_system_manager:
-            self._os_system_manager = OperationSystemManager()
         log("====== WebDriver manager ======")
 
+    def set_browser_version_manually(self, binary_path: str):
+        browser_type = self.driver.get_browser_type()
+        self._cache_manager._os_system_manager.set_browser_version_manually(
+            browser_type=browser_type, binary_path=binary_path
+        )
+    
     def get_driver_path(self):
         return self.driver_path
 
@@ -54,7 +56,7 @@ class DriverManager(object):
         return binary_path
 
     def get_os_type(self):
-        return self._os_system_manager.get_os_type()
+        return self.driver._os_system_manager.get_os_type()
 
     def is_installed(self) -> bool:
         binary_path = self._cache_manager.find_driver(self.driver)

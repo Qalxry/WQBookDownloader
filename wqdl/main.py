@@ -17,7 +17,7 @@ import platform
 import flet as ft
 from PIL import Image
 from requests.exceptions import HTTPError
-from typing import Literal, Optional, TypedDict
+from typing import Literal, Optional, TypedDict, List
 from selenium import webdriver
 from selenium.webdriver import (
     FirefoxService,
@@ -30,7 +30,12 @@ from selenium.webdriver import (
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchWindowException, TimeoutException
+from selenium.common.exceptions import (
+    NoSuchWindowException,
+    TimeoutException,
+    InvalidSessionIdException,
+    WebDriverException,
+)
 
 import wqdl
 from wqdl.webdriver_manager.chrome import ChromeDriverManager
@@ -59,11 +64,21 @@ class EdgeChromiumDriverManagerConfig(TypedDict):
 
 class WQDLConfig(JsonProxy):
     def __init__(self, json_file, mode="r", save_after_change_count=None):
+        self.check_update = True
+        self.update_json_urls = [
+            "https://gitee.com/qalxry/WQBookDownloader/raw/main/UPDATE.json",
+            "https://github.com/Qalxry/WQBookDownloader/raw/refs/heads/main/UPDATE.json",
+        ]
+        self.check_hotfix = True
+        self.hotfix_json_urls = [
+            "https://gitee.com/qalxry/WQBookDownloader/raw/main/HOTFIX.json",
+            "https://github.com/Qalxry/WQBookDownloader/raw/refs/heads/main/HOTFIX.json",
+        ]
         self.chrome_driver_manager_config = ChromeDriverManagerConfig(
             url="https://registry.npmmirror.com/-/binary/chromedriver",
             latest_release_url="https://registry.npmmirror.com/-/binary/chromedriver/LATEST_RELEASE",
-            latest_patch_versions_per_build_url="https://gh-proxy.com/github.com/GoogleChromeLabs/chrome-for-testing/raw/refs/heads/main/data/latest-patch-versions-per-build.json",
-            known_good_versions_with_downloads_url="https://gh-proxy.com/github.com/GoogleChromeLabs/chrome-for-testing/raw/refs/heads/main/data/known-good-versions-with-downloads.json",
+            latest_patch_versions_per_build_url="https://gh.llkk.cc/https://github.com/GoogleChromeLabs/chrome-for-testing/raw/refs/heads/main/data/latest-patch-versions-per-build.json",
+            known_good_versions_with_downloads_url="https://gh.llkk.cc/https://github.com/GoogleChromeLabs/chrome-for-testing/raw/refs/heads/main/data/known-good-versions-with-downloads.json",
         )
         self.gecko_driver_manager_config = GeckoDriverManagerConfig(
             url="https://gh.llkk.cc/https://github.com/mozilla/geckodriver/releases/download",
@@ -189,7 +204,7 @@ def commit_issue(error_msg: str):
         print(f"⛔ 自动打开失败，请手动访问：\n{encoded_url}")
 
 
-def goto_star_repo():
+def goto_repo_page():
     webbrowser.open(REPO_URL)
 
 
@@ -283,7 +298,9 @@ def fetch(url, retries=3) -> requests.Response | None:
             response.raise_for_status()
             return response
         except:
-            print(f"下载文件失败，状态码：{response.status_code}。重试... ({retry+1}/3)")
+            print(
+                f"下载文件失败，状态码：{response.status_code}。重试... ({retry+1}/3)"
+            )
             time.sleep(0.1)
     return None
 
@@ -436,9 +453,11 @@ class WQBookDownloaderGUI:
             expand=True,
         )
         self.query_user_memory = {}
+        self.file_picker = ft.FilePicker()
         page.add(
             ft.Column(
                 [
+                    self.file_picker,
                     search_bar,
                     button_bar,
                     book_list_container,
@@ -465,7 +484,7 @@ class WQBookDownloaderGUI:
         return_index: Optional[bool] = False,
     ) -> str:
         res = None
-
+        # TODO 将 dialog 改为栈式，以支持多个 dialog 同时存在
         if content in self.query_user_memory:
             if return_index:
                 for i, selection in enumerate(selections):
@@ -501,7 +520,7 @@ class WQBookDownloaderGUI:
         self.page.update()
         while res is None:
             time.sleep(0.05)
-            
+
         if return_index:
             for i, selection in enumerate(selections):
                 if selection == res:
@@ -532,6 +551,56 @@ class WQBookDownloaderGUI:
             info_str = info_str[:60] + "..."
         self.status_text.value = info_str
         self.page.update()
+
+    @show_log
+    def query_user_file_path(
+        self,
+        title: str = "请选择",
+        content: str = "选择文件路径",
+        initial_directory: Optional[str] = None,
+        file_type: ft.FilePickerFileType = ft.FilePickerFileType.ANY,
+        allowed_extensions: Optional[List[str]] = None,
+        allow_multiple: Optional[bool] = False,
+        ensure_exists: Optional[bool] = True,
+    ) -> str:
+        self.query_user(title, content, ["确认"])
+
+        while True:
+            file_paths = "empty"
+
+            def on_result_file_picker(e: ft.FilePickerResultEvent):
+                nonlocal file_paths
+                temp = []
+                if e.files:
+                    for fpf in e.files:
+                        temp.append(fpf.path)
+                file_paths = temp
+
+            self.waiting_dialog("选择", "等待选择文件...")
+            self.file_picker.on_result = on_result_file_picker
+            self.file_picker.pick_files(
+                dialog_title=content,
+                initial_directory=initial_directory,
+                file_type=file_type,
+                allowed_extensions=allowed_extensions,
+                allow_multiple=allow_multiple,
+            )
+            self.page.update()
+            while file_paths == "empty":
+                time.sleep(0.5)
+            self.close_waiting_dialog()
+            self.page.update()
+
+            if ensure_exists:
+                if file_paths is None or len(file_paths) == 0:
+                    self.query_user("警告", "未选择任何文件，请重新选择", ["确认"])
+                    continue
+
+            if allow_multiple:
+                return file_paths or []
+            if file_paths and len(file_paths) > 0:
+                return file_paths[0]
+            return []
 
     @show_log
     def on_click_parse_button(self, e: ft.ControlEvent):
@@ -692,16 +761,84 @@ class WQBookDownloaderGUI:
             )
             if res == "赏个 Star":
                 wqdlconfig.starred = True
-                goto_star_repo()
+                goto_repo_page()
                 self.query_user("🌹感谢🌹", "感谢您的支持！", ["确认"])
+
+    @show_log
+    def check_hotfix(self):
+        """
+        检查热修复信息（即查看是否有 configs.json 中需要更改的配置信息）
+        """
+        if not wqdlconfig.check_hotfix:
+            return
+        self.waiting_dialog("请稍候", "正在检查是否有新的配置信息...")
+        hotfix_info = None
+        for url in wqdlconfig.hotfix_json_urls:
+            try:
+                r = requests.get(url, timeout=3)
+                r.raise_for_status()
+                hotfix_info = r.json()
+                break
+            except:
+                continue
+
+        if not hotfix_info:
+            self.close_waiting_dialog()
+            self.print_info("未获取到云端配置信息")
+            return
+        keys = ""
+        for key, value in hotfix_info.items():
+            if key in wqdlconfig:
+                if wqdlconfig[key] != value:
+                    wqdlconfig[key] = value
             else:
-                for i in range(1, 10):
-                    res = self.query_user("?" * i, "😭" * i, ["就不给😛", "好吧😒"])
-                    if res == "好吧😒":
-                        wqdlconfig.starred = True
-                        goto_star_repo()
-                        self.query_user("🌹感谢🌹", "感谢您的支持！", ["确认"])
-                        break
+                wqdlconfig[key] = value
+            keys += f"{key} "
+                
+        self.close_waiting_dialog()
+        self.print_info("配置信息更新完毕！")
+        self.query_user(
+            "提示",
+            f"配置信息更新完毕！\n更新了 {keys}",
+            ["确认"],
+        )
+
+    @show_log
+    def check_update(self):
+        if not wqdlconfig.check_update:
+            return
+        self.waiting_dialog("请稍候", "正在检查更新...")
+        local_version = str(wqdl.__version__).strip()
+        new_version = None
+        for url in wqdlconfig.update_json_urls:
+            try:
+                r = requests.get(url, timeout=3)
+                r.raise_for_status()
+                update_info = r.json()
+                if "latest_version" in update_info:
+                    new_version = str(update_info["latest_version"]).strip()
+                    break
+            except:
+                continue
+        if not new_version:
+            self.close_waiting_dialog()
+            self.query_user("提示", "未获取到最新版本信息。", ["确认"])
+            return
+
+        if new_version > local_version:
+            self.close_waiting_dialog()
+            res = self.query_user(
+                "更新提示",
+                f"检测到新版本 {new_version} (当前版本为 {local_version})，是否前往 Github 项目主页下载？",
+                ["忽略", "前往下载"],
+            )
+            if res == "前往下载":
+                goto_repo_page()
+        else:
+            self.close_waiting_dialog()
+            self.query_user(
+                "提示", f"检查更新完毕，当前已是最新版本 {local_version}", ["确认"]
+            )
 
 
 class WQBookDownloader:
@@ -748,14 +885,32 @@ class WQBookDownloader:
                 # known_good_versions_with_downloads_url="https://gh-proxy.com/github.com/GoogleChromeLabs/chrome-for-testing/raw/refs/heads/main/data/known-good-versions-with-downloads.json",
                 **wqdlconfig.chrome_driver_manager_config,
             )
-            if not driver_manager.is_installed():
-                self.gui.waiting_dialog(
-                    "请稍候", f"未检测到 {browserType} 浏览器驱动，正在下载..."
-                )
-                self.gui.print_info(f"正在下载 {browserType} 浏览器驱动，请稍候...")
-                driver_manager.install()
-                self.gui.print_info(f"{browserType} 浏览器驱动下载完成")
-
+            while True:
+                try:
+                    if not driver_manager.is_installed():
+                        self.gui.waiting_dialog(
+                            "请稍候", f"未检测到 {browserType} 浏览器驱动，正在下载..."
+                        )
+                        self.gui.print_info(
+                            f"正在下载 {browserType} 浏览器驱动，请稍候..."
+                        )
+                        driver_manager.install()
+                        self.gui.print_info(f"{browserType} 浏览器驱动下载完成")
+                    break
+                except Exception as e:
+                    if "code" in e.args[0] and e.args[0]["code"] == 1:
+                        browser_path = self.gui.query_user_file_path(
+                            "提示",
+                            "自动检测浏览器路径失败，请手动选择浏览器路径",
+                            allowed_extensions=["exe"],
+                        )
+                        self.gui.waiting_dialog(
+                            "请稍候",
+                            "等待完成登录操作。程序会自动检测登录情况，请勿手动关闭浏览器窗口...",
+                        )
+                        driver_manager.set_browser_version_manually(browser_path)
+                    else:
+                        raise e
             self.driver = webdriver.Chrome(
                 service=ChromeService(driver_manager.get_driver_path()),
                 options=options,
@@ -777,14 +932,32 @@ class WQBookDownloader:
                 # mozila_release_download_url="https://gh.llkk.cc/https://github.com/mozilla/geckodriver/releases/download",
                 **wqdlconfig.gecko_driver_manager_config,
             )
-            if not driver_manager.is_installed():
-                self.gui.waiting_dialog(
-                    "请稍候", f"未检测到 {browserType} 浏览器驱动，正在下载..."
-                )
-                self.gui.print_info(f"正在下载 {browserType} 浏览器驱动，请稍候...")
-                driver_manager.install()
-                self.gui.print_info(f"{browserType} 浏览器驱动下载完成")
-
+            while True:
+                try:
+                    if not driver_manager.is_installed():
+                        self.gui.waiting_dialog(
+                            "请稍候", f"未检测到 {browserType} 浏览器驱动，正在下载..."
+                        )
+                        self.gui.print_info(
+                            f"正在下载 {browserType} 浏览器驱动，请稍候..."
+                        )
+                        driver_manager.install()
+                        self.gui.print_info(f"{browserType} 浏览器驱动下载完成")
+                    break
+                except Exception as e:
+                    if "code" in e.args[0] and e.args[0]["code"] == 1:
+                        browser_path = self.gui.query_user_file_path(
+                            "提示",
+                            "自动检测浏览器路径失败，请手动选择浏览器路径",
+                            allowed_extensions=["exe"],
+                        )
+                        self.gui.waiting_dialog(
+                            "请稍候",
+                            "等待完成登录操作。程序会自动检测登录情况，请勿手动关闭浏览器窗口...",
+                        )
+                        driver_manager.set_browser_version_manually(browser_path)
+                    else:
+                        raise e
             self.driver = webdriver.Firefox(
                 service=FirefoxService(driver_manager.get_driver_path()),
                 options=options,
@@ -807,13 +980,33 @@ class WQBookDownloader:
             driver_manager = EdgeChromiumDriverManager(
                 **wqdlconfig.edge_chromium_driver_manager_config
             )
-            if not driver_manager.is_installed():
-                self.gui.waiting_dialog(
-                    "请稍候", f"未检测到 {browserType} 浏览器驱动，正在下载..."
-                )
-                self.gui.print_info(f"正在下载 {browserType} 浏览器驱动，请稍候...")
-                driver_manager.install()
-                self.gui.print_info(f"{browserType} 浏览器驱动下载完成")
+            while True:
+                try:
+                    # debug
+                    if not driver_manager.is_installed():
+                        self.gui.waiting_dialog(
+                            "请稍候", f"未检测到 {browserType} 浏览器驱动，正在下载..."
+                        )
+                        self.gui.print_info(
+                            f"正在下载 {browserType} 浏览器驱动，请稍候..."
+                        )
+                        driver_manager.install()
+                        self.gui.print_info(f"{browserType} 浏览器驱动下载完成")
+                    break
+                except Exception as e:
+                    if "code" in e.args[0] and e.args[0]["code"] == 1:
+                        browser_path = self.gui.query_user_file_path(
+                            "提示",
+                            "自动检测浏览器路径失败，请手动选择浏览器路径",
+                            allowed_extensions=["exe"],
+                        )
+                        self.gui.waiting_dialog(
+                            "请稍候",
+                            "等待完成登录操作。程序会自动检测登录情况，请勿手动关闭浏览器窗口...",
+                        )
+                        driver_manager.set_browser_version_manually(browser_path)
+                    else:
+                        raise e
 
             self.driver = webdriver.Edge(
                 service=EdgeService(driver_manager.get_driver_path()),
@@ -857,14 +1050,22 @@ class WQBookDownloader:
     # Step 1
     @show_log
     def login_workflow(self):
-        self.gui.query_user(
-            "提示", "接下来点击确认将打开浏览器，请手动登录后再返回此窗口", ["确认"]
-        )
-        self.gui.print_info("请完成手动登录操作...")
         try:
-            self.gui.waiting_dialog("请稍候", "等待完成登录操作，请勿直接关闭窗口...")
+            self.gui.query_user(
+                "提示",
+                "接下来点击确认将打开浏览器，请手动登录后再返回此窗口。\n但注意，请不要关闭浏览器，程序会自己关，否则容易引发错误！",
+                ["确认"],
+            )
+            self.gui.print_info("请完成手动登录操作...")
+            self.gui.waiting_dialog(
+                "请稍候",
+                "等待完成登录操作。程序会自动检测登录情况，请勿手动关闭浏览器窗口...",
+            )
             self.setup_driver(headless=False, window_size="mobile")
-            self.gui.waiting_dialog("请稍候", "等待完成登录操作，请勿直接关闭窗口...")
+            self.gui.waiting_dialog(
+                "请稍候",
+                "等待完成登录操作。程序会自动检测登录情况，请勿手动关闭浏览器窗口...",
+            )
             self.driver.get(
                 # f"https://{self.book['domain']}/deep/m/read/pdf?bid={self.book['bid']}"
                 wqdlconfig.page_url_pattern.format(
@@ -928,21 +1129,19 @@ class WQBookDownloader:
                         )
                     ):
                         break
-
-        except NoSuchWindowException:
+            time.sleep(2)  # 等待页面加载完成
+            self.save_cookies()
+            self.driver.quit()
+            self.gui.close_waiting_dialog()
+            self.gui.query_user(
+                "提示",
+                "登录成功！cookies 已缓存至 cookies.json，接下来将开始书籍下载",
+                ["确认"],
+            )
+            return True
+        except NoSuchWindowException or InvalidSessionIdException or WebDriverException:
             self.gui.query_user("提示", "登录失败", ["确认"])
             return False
-
-        time.sleep(2)  # 等待页面加载完成
-        self.save_cookies()
-        self.driver.quit()
-        self.gui.close_waiting_dialog()
-        self.gui.query_user(
-            "提示",
-            "登录成功！cookies 已缓存至 cookies.json，接下来将开始书籍下载",
-            ["确认"],
-        )
-        return True
 
     # Step 2
     @show_log
@@ -1182,13 +1381,16 @@ class WQBookDownloader:
                 if not item["isLeaf"] and item["children"]:
                     flat_toc.extend(flatten_toc(item["children"]))
             return flat_toc
+
         if toc_data is None:
             return
         try:
             doc = fitz.open(pdf_path)
             toc = flatten_toc(toc_data)
             doc.set_toc(toc)
-            if output_path is None or os.path.abspath(output_path) == os.path.abspath(pdf_path):
+            if output_path is None or os.path.abspath(output_path) == os.path.abspath(
+                pdf_path
+            ):
                 output_path = pdf_path + ".temp.pdf"
                 doc.save(output_path)
                 doc.close()
@@ -1197,7 +1399,7 @@ class WQBookDownloader:
             else:
                 doc.save(output_path)
                 doc.close()
-                
+
             self.gui.close_waiting_dialog()
             self.gui.print_info(f"已添加目录到PDF：{output_path}")
         except Exception as e:
@@ -1243,7 +1445,7 @@ class WQBookDownloader:
                 if res == "确认并报告错误":
                     commit_issue(f"下载目录文件失败：{catalog_url}，{self.book}")
                 return None
-                    
+
         self.book["toc_data"] = catalog_data
         return catalog_data
 
@@ -1275,7 +1477,7 @@ class WQBookDownloader:
             return
         elif (
             self.book["downloaded_pages"] != self.book["pages"]
-            and res != '继续生成PDF'
+            and res != "继续生成PDF"
             and self.gui.query_user(
                 content=f"仅获取到 {self.book['downloaded_pages']} 页，是否继续生成 PDF？",
                 selections=["是", "否"],
@@ -1315,14 +1517,16 @@ def download_book(gui_handler: WQBookDownloaderGUI, book: dict):
 
 
 if __name__ == "__main__":
-    if getattr(sys, 'frozen', False):
+    if getattr(sys, "frozen", False):
         base_dir = sys._MEIPASS
     else:
         base_dir = os.path.dirname(os.path.abspath(__file__))
-         
+
     def main(page: ft.Page):
         # page.fonts = {"Noto Sans SC": "NotoSansSC-Regular.ttf"}
-        page.fonts = {"Noto Sans SC": os.path.join(base_dir, "assets", "NotoSansSC-Regular.ttf")}
+        page.fonts = {
+            "Noto Sans SC": os.path.join(base_dir, "assets", "NotoSansSC-Regular.ttf")
+        }
         page.theme = ft.Theme(font_family="Noto Sans SC")
         page.window_height = 700
         page.window_min_height = 700
@@ -1336,11 +1540,13 @@ if __name__ == "__main__":
         page.window_center()
         page.padding = ft.Padding(20, 30, 20, 0)
         page.title = f"WQBookDownloader 文泉书局下载器 v{wqdl.__version__}"
-        WQBookDownloaderGUI(page)
+        gui = WQBookDownloaderGUI(page)
         page.window_visible = True  # 显示窗口
         page.update()
         page.window_resizable = False
         page.update()
+        gui.check_hotfix()
+        gui.check_update()
 
     # 先创建一个隐藏的窗口，加载完成后再显示
     ft.app(target=main, view=ft.AppView.FLET_APP_HIDDEN)
