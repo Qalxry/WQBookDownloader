@@ -47,3 +47,23 @@ if os.path.exists(pyproject_file):
     print(f"pyproject.toml 更新完毕: version = {version}")
 else:
     print("pyproject.toml 文件不存在")
+    
+    
+    
+# 找到 README.md 中的 WQBookDownloader-v{version like 2.0.0}-{win64 or linux64}.zip 链接，并替换为最新版本号
+readme_file = "./README.md"
+if os.path.exists(readme_file):
+    with open(readme_file, "r", encoding="utf-8") as f:
+        readme_content = f.read()
+
+    # 使用 lambda 函数替换下载链接
+    new_readme_content = re.sub(
+        r"(WQBookDownloader-v)(\d+\.\d+\.\d+)-(win64|linux64)(\.zip)",
+        lambda m: f"{m.group(1)}{version}-{m.group(3)}{m.group(4)}",
+        readme_content,
+        count=0  # 替换所有匹配项
+    )
+
+    with open(readme_file, "w", encoding="utf-8") as f:
+        f.write(new_readme_content)
+    print(f"README.md 更新完毕: WQBookDownloader-v{version}-{{win64|linux64}}.zip")
