@@ -1,6 +1,5 @@
 <h1 align='center'>WQBookDownloader 文泉书局下载器 v2</h1>
 
-<!-- Github Stats -->
 <div align="center">
 <img src="https://img.shields.io/github/stars/Qalxry/WQBookDownloader?style=social" alt="GitHub stars" />
 <img src="https://img.shields.io/github/forks/Qalxry/WQBookDownloader?style=social" alt="GitHub forks" />
@@ -18,9 +17,11 @@
 
 ## 最新版本下载
 
-### Windows 64位：[下载](https://github.com/Qalxry/WQBookDownloader/releases/latest/download/WQBookDownloader-v2.0.1-win64.zip)
-
-### Linux 64位：[下载](https://github.com/Qalxry/WQBookDownloader/releases/latest/download/WQBookDownloader-v2.0.1-linux64.zip)
+| 平台 | Github Release 下载 | 通过代理加速下载（免翻墙，速度更快） |
+|:---:|:---:|:---:|
+| Windows 64位 | [下载](https://github.com/Qalxry/WQBookDownloader/releases/latest/download/WQBookDownloader-v2.0.1-win64.zip) | [下载](https://gh.llkk.cc/https://github.com/Qalxry/WQBookDownloader/releases/latest/download/WQBookDownloader-v2.0.1-win64.zip) |
+|  Linux 64位  | [下载](https://github.com/Qalxry/WQBookDownloader/releases/latest/download/WQBookDownloader-v2.0.1-linux64.zip) | [下载](https://gh.llkk.cc/https://github.com/Qalxry/WQBookDownloader/releases/latest/download/WQBookDownloader-v2.0.1-linux64.zip) |
+|  MacOS 64位  | [从源码运行](#从源码运行) | [从源码运行](#从源码运行) |
 
 ![界面](./assets/image.png)
 
@@ -115,6 +116,4 @@ pyinstaller WQBookDownloader.spec
 - 如果出现任何问题，可以在 Github 仓库中提交 issue，共同讨论解决方案！🤗
 
 
-
-<!-- Star History Badge -->
 [![Star History Chart](https://api.star-history.com/svg?repos=Qalxry/WQBookDownloader&type=Date)](https://star-history.com/#Qalxry/WQBookDownloader&Date)
