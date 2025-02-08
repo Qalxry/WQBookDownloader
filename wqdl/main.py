@@ -773,7 +773,7 @@ class WQBookDownloaderGUI:
         """
         if not wqdlconfig.check_hotfix:
             return
-        self.waiting_dialog("请稍候", "正在检查是否有新的配置信息...")
+        self.waiting_dialog("请稍候", "正在检查是否有需要更新的配置信息...")
         hotfix_info = None
         for url in wqdlconfig.hotfix_json_urls:
             try:
@@ -801,7 +801,7 @@ class WQBookDownloaderGUI:
 
         self.close_waiting_dialog()
         if updated_keys == "":
-            self.print_info("未发现新的配置信息")
+            self.print_info("未发现需要更新的配置信息")
             return
         self.print_info("配置信息更新完毕！")
         self.query_user(

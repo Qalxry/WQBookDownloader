@@ -1,2 +1,2 @@
-python copy_version.py
 pyinstaller WQBookDownloader.spec
+python copy_version.py
