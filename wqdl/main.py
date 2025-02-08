@@ -123,6 +123,7 @@ wqdlconfig = WQDLConfig(CONFIG_FILE, "rw")
 SCREENSHOT_WAIT = wqdlconfig.screenshot_wait
 DOWNLOAD_DIR = wqdlconfig.download_dir
 REPO_URL = "https://github.com/Qalxry/WQBookDownloader"
+LATEST_RELEASE_URL = "https://github.com/Qalxry/WQBookDownloader/releases/latest"
 
 # 一些常量
 BUTTON_HEIGHT = 60
@@ -204,8 +205,9 @@ def commit_issue(error_msg: str):
         print(f"⛔ 自动打开失败，请手动访问：\n{encoded_url}")
 
 
-def goto_repo_page():
-    webbrowser.open(REPO_URL)
+def goto_repo_page(url: Optional[str] = REPO_URL):
+    url = url or REPO_URL
+    webbrowser.open(url)
 
 
 def open_file_manager(path=None):
@@ -786,20 +788,24 @@ class WQBookDownloaderGUI:
             self.close_waiting_dialog()
             self.print_info("未获取到云端配置信息")
             return
-        keys = ""
+        updated_keys = ""
         for key, value in hotfix_info.items():
             if key in wqdlconfig:
                 if wqdlconfig[key] != value:
                     wqdlconfig[key] = value
+                    updated_keys += f"{key} "
             else:
                 wqdlconfig[key] = value
-            keys += f"{key} "
-                
+                updated_keys += f"{key} "
+
         self.close_waiting_dialog()
+        if updated_keys == "":
+            self.print_info("未发现新的配置信息")
+            return
         self.print_info("配置信息更新完毕！")
         self.query_user(
             "提示",
-            f"配置信息更新完毕！\n更新了 {keys}",
+            f"配置信息更新完毕！\n更新了 {updated_keys}",
             ["确认"],
         )
 
@@ -829,11 +835,11 @@ class WQBookDownloaderGUI:
             self.close_waiting_dialog()
             res = self.query_user(
                 "更新提示",
-                f"检测到新版本 {new_version} (当前版本为 {local_version})，是否前往 Github 项目主页下载？",
+                f"检测到新版本 {new_version} (当前版本为 {local_version})，是否前往 Github 下载？",
                 ["忽略", "前往下载"],
             )
             if res == "前往下载":
-                goto_repo_page()
+                goto_repo_page(LATEST_RELEASE_URL)
         else:
             self.close_waiting_dialog()
             self.query_user(

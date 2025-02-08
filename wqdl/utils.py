@@ -1,10 +1,10 @@
 import os
 import json
 import atexit
-from typing import Literal, Optional, Any
+from typing import Literal, Optional, Any, MutableMapping
 
 
-class JsonProxy:
+class JsonProxy(MutableMapping):
     """
     A proxy class that interfaces with a JSON file and allows attribute-based
     read and write access. It supports optional autosave functionality and can
@@ -114,7 +114,105 @@ class JsonProxy:
             self._JsonProxy__change_count = 0
         else:
             self._JsonProxy__change_count += 1
-
+    
+    def __getitem__(self, key: str):
+        """
+        Return the value of the specified attribute.
+        """
+        return getattr(self, key)
+    
+    def __setitem__(self, key: str, value: Any):
+        """
+        Set the value of the specified attribute.
+        """
+        setattr(self, key, value)
+        
+    def __delitem__(self, key: str):
+        """
+        Delete the specified attribute.
+        """
+        delattr(self, key)
+        
+    def __contains__(self, key: str):
+        """
+        Check if the specified attribute exists.
+        """
+        return key in self.__dict__
+    
+    def keys(self):
+        """
+        Return a list of non-private attribute names.
+        """
+        return [key for key in self.__dict__ if not key.startswith("_JsonProxy_")]
+    
+    def values(self):
+        """
+        Return a list of non-private attribute values.
+        """
+        return [value for key, value in self.__dict__.items() if not key.startswith("_JsonProxy_")]
+    
+    def items(self):
+        """
+        Return a list of non-private attribute name-value pairs.
+        """
+        return [(key, value) for key, value in self.__dict__.items() if not key.startswith("_JsonProxy_")]
+    
+    def clear(self):
+        """
+        Clear all non-private attributes.
+        """
+        for key in self.keys():
+            delattr(self, key)
+            
+    def get(self, key: str, default: Any = None):
+        """
+        Return the value of the specified attribute, or a default value if the attribute does not exist.
+        """
+        return getattr(self, key, default)
+    
+    def pop(self, key: str, default: Any = None):
+        """
+        Remove the specified attribute and return its value, or a default value if the attribute does not exist.
+        """
+        value = self.get(key, default)
+        delattr(self, key)
+        return value
+    
+    def update(self, *args, **kwargs):
+        """
+        Update the attributes of the instance with the specified key-value pairs.
+        """
+        for key, value in dict(*args, **kwargs).items():
+            setattr(self, key, value)
+            
+    def setdefault(self, key: str, default: Any = None):
+        """
+        Return the value of the specified attribute, or set it to the default value if the attribute does not exist.
+        """
+        if key not in self:
+            setattr(self, key, default)
+        return getattr(self, key)
+    
+    def copy(self):
+        """
+        Return a shallow copy of the instance.
+        """
+        return {key: value for key, value in self.items()}
+    
+    def popitem(self):
+        """
+        Remove and return an arbitrary attribute name-value pair.
+        """
+        key = next(iter(self.keys()))
+        value = self.pop(key)
+        return key, value
+    
+    def __repr__(self):
+        """
+        Return a string representation of the instance.
+        """
+        return f"{self.__class__.__name__}({self.__dict__})"
+    
     def __iter__(self):
         """
         Return an iterator over the non-private attributes of the instance.
