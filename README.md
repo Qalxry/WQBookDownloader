@@ -18,9 +18,9 @@
 
 ## 最新版本下载
 
-### Windows 64位：[下载](https://github.com/Qalxry/WQBookDownloader/releases/download/GUI/WQBookDownloader-v2.0.1-win64.zip)
+### Windows 64位：[下载](https://github.com/Qalxry/WQBookDownloader/releases/latest/download/WQBookDownloader-v2.0.1-win64.zip)
 
-### Linux 64位：[下载](https://github.com/Qalxry/WQBookDownloader/releases/download/GUI/WQBookDownloader-v2.0.1-linux64.zip)
+### Linux 64位：[下载](https://github.com/Qalxry/WQBookDownloader/releases/latest/download/WQBookDownloader-v2.0.1-linux64.zip)
 
 ![界面](./assets/image.png)
 
